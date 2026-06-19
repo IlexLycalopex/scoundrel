@@ -9,7 +9,7 @@ import {
   outstandingMonsters,
   MAX_HEALTH,
 } from "../engine/gameEngine.js";
-import { createCardElement } from "./cardView.js";
+import { createCardElement, preloadCardImages } from "./cardView.js";
 
 const els = {
   healthFill: document.getElementById("health-fill"),
@@ -347,3 +347,8 @@ function showEndScreen() {
 }
 
 newGame();
+
+// Defer the full-deck warm-up until the current room's images have had a
+// chance to claim the connection first.
+const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 200));
+idle(preloadCardImages);

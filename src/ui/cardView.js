@@ -1,12 +1,23 @@
 // Renders a Card as a DOM element using the real artwork in assets/cards/,
-// named "<suit>-<rank>.jpg" per the spec's asset convention.
+// named "<suit>-<rank>.webp" per the spec's asset convention.
+
+import { buildDeck } from "../engine/cards.js";
 
 const SUIT_LABEL = { clubs: "Clubs", spades: "Spades", diamonds: "Diamonds", hearts: "Hearts" };
 const TYPE_LABEL = { monster: "Monster", weapon: "Weapon", potion: "Potion" };
 const FACE_RANKS = new Set(["J", "Q", "K", "A"]);
 
 export function cardImagePath(card) {
-  return `assets/cards/${card.suit}-${card.rank}.jpg`;
+  return `assets/cards/${card.suit}-${card.rank}.webp`;
+}
+
+// Warms the browser cache for every card face (~2.2MB total) in the
+// background so cards that haven't appeared yet don't stall on first draw.
+export function preloadCardImages() {
+  for (const card of buildDeck()) {
+    new Image().src = cardImagePath(card);
+  }
+  new Image().src = "assets/cards/back.webp";
 }
 
 export function createCardElement(card, { onClick, disabled = false, weaponIneligible = false, carried = false, tabIndex = 0 } = {}) {

@@ -18,6 +18,7 @@ const els = {
   deckCount: document.getElementById("deck-count"),
   discardCount: document.getElementById("discard-count"),
   rulesBtn: document.getElementById("rules-btn"),
+  newGameBtn: document.getElementById("new-game-btn"),
   weaponSlot: document.getElementById("weapon-slot"),
   weaponThreshold: document.getElementById("weapon-threshold"),
   roomCards: document.getElementById("room-cards"),
@@ -228,7 +229,31 @@ function showRules() {
   });
 }
 
+function handleNewGameClick() {
+  if (state.turnCount === 0 && state.status === "playing") {
+    newGame();
+    return;
+  }
+  openModal((modal) => {
+    const h3 = document.createElement("h3");
+    h3.textContent = "Start a new game?";
+    const p = document.createElement("p");
+    p.textContent = "Your current run will be abandoned and a fresh dungeon will be dealt.";
+    const actions = document.createElement("div");
+    actions.className = "modal-actions";
+    const confirmBtn = document.createElement("button");
+    confirmBtn.textContent = "New game";
+    confirmBtn.addEventListener("click", newGame);
+    const cancelBtn = document.createElement("button");
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.addEventListener("click", closeModal);
+    actions.append(confirmBtn, cancelBtn);
+    modal.append(h3, p, actions);
+  });
+}
+
 els.rulesBtn.addEventListener("click", showRules);
+els.newGameBtn.addEventListener("click", handleNewGameClick);
 
 // --- Rendering -------------------------------------------------------------
 

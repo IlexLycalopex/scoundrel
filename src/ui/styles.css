@@ -55,7 +55,9 @@ button { touch-action: manipulation; }
 
 #turn-panel { display: flex; align-items: center; gap: 12px; }
 
-#rules-btn {
+#hud-actions { display: flex; align-items: center; gap: 10px; }
+
+#rules-btn, #new-game-btn {
   background: linear-gradient(180deg, var(--stone) 0%, var(--stone-dark) 100%);
   color: var(--gold-bright);
   border: 2px solid var(--gold);
@@ -70,14 +72,14 @@ button { touch-action: manipulation; }
   transition: box-shadow 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
 
-#rules-btn:hover {
+#rules-btn:hover, #new-game-btn:hover {
   color: #fff;
   box-shadow: 0 0 8px rgba(201, 164, 76, 0.6);
 }
 
-#rules-btn:active { transform: translateY(1px); }
+#rules-btn:active, #new-game-btn:active { transform: translateY(1px); }
 
-#rules-btn:focus-visible { outline: 3px solid var(--gold-bright); }
+#rules-btn:focus-visible, #new-game-btn:focus-visible { outline: 3px solid var(--gold-bright); }
 
 .hud-title {
   font-size: 0.75rem;
@@ -473,7 +475,7 @@ button { touch-action: manipulation; }
   #hud { padding: 10px 14px; justify-content: center; }
   #health-panel { order: 1; flex-basis: 100%; justify-content: center; }
   #turn-panel { order: 2; }
-  #rules-btn { order: 3; }
+  #hud-actions { order: 3; }
 
   /* Weapon and room come first (the cards you act on); the deck/discard
      piles are reference info, so they move to the bottom, side by side,
@@ -506,5 +508,5 @@ button { touch-action: manipulation; }
 
 @media (hover: none) {
   .card:hover { transform: none; }
-  #avoid-btn:hover:not(:disabled), #rules-btn:hover { box-shadow: none; color: var(--gold-bright); }
+  #avoid-btn:hover:not(:disabled), #rules-btn:hover, #new-game-btn:hover { box-shadow: none; color: var(--gold-bright); }
 }

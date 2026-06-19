@@ -1,12 +1,13 @@
-// Renders a Card as a DOM element. No art assets required: faces are drawn
-// from rank/suit/value text + icon, following the <suit>-<rank> naming
-// convention in spirit so real art (e.g. assets/cards/clubs-7.png) can be
-// dropped in later by swapping the background-image here without touching
-// any game logic.
+// Renders a Card as a DOM element using the real artwork in assets/cards/,
+// named "<suit>-<rank>.jpg" per the spec's asset convention.
 
-const SUIT_GLYPH = { clubs: "♣", spades: "♠", diamonds: "♦", hearts: "♥" };
 const SUIT_LABEL = { clubs: "Clubs", spades: "Spades", diamonds: "Diamonds", hearts: "Hearts" };
 const TYPE_LABEL = { monster: "Monster", weapon: "Weapon", potion: "Potion" };
+const FACE_RANKS = new Set(["J", "Q", "K", "A"]);
+
+export function cardImagePath(card) {
+  return `assets/cards/${card.suit}-${card.rank}.jpg`;
+}
 
 export function createCardElement(card, { onClick, disabled = false, weaponIneligible = false, carried = false, tabIndex = 0 } = {}) {
   const el = document.createElement("button");
@@ -21,35 +22,23 @@ export function createCardElement(card, { onClick, disabled = false, weaponIneli
   if (carried) ariaParts.push("carried from previous room");
   el.setAttribute("aria-label", ariaParts.join(", "));
 
-  const topRow = document.createElement("div");
-  topRow.className = "card-suit-row";
-  const glyph = document.createElement("span");
-  glyph.textContent = SUIT_GLYPH[card.suit];
-  glyph.setAttribute("aria-hidden", "true");
-  const letter = document.createElement("span");
-  letter.textContent = card.suit[0].toUpperCase();
-  letter.setAttribute("aria-hidden", "true");
-  topRow.append(glyph, letter);
+  const img = document.createElement("img");
+  img.className = "card-face";
+  img.src = cardImagePath(card);
+  img.alt = "";
+  img.draggable = false;
+  el.appendChild(img);
 
-  const rank = document.createElement("div");
-  rank.className = "card-rank";
-  rank.textContent = String(card.rank);
-  rank.setAttribute("aria-hidden", "true");
-
-  const footer = document.createElement("div");
-  footer.className = "card-footer";
-
-  const typeLabel = document.createElement("span");
-  typeLabel.className = "card-type-label";
-  typeLabel.textContent = TYPE_LABEL[card.type];
-
-  const valueBadge = document.createElement("span");
-  valueBadge.className = "card-value-badge";
-  valueBadge.textContent = `v${card.value}`;
-  valueBadge.setAttribute("aria-hidden", "true");
-
-  footer.append(typeLabel, valueBadge);
-  el.append(topRow, rank, footer);
+  // Face-rank monster cards (J/Q/K/A) print a letter, not the resolved
+  // 11-14 value the rules actually use — surface the number explicitly
+  // per the accessibility requirement that combat-relevant numbers can't
+  // rely on rank-letter recognition alone.
+  if (FACE_RANKS.has(card.rank)) {
+    const valueBadge = document.createElement("span");
+    valueBadge.className = "card-value-badge";
+    valueBadge.textContent = card.value;
+    el.appendChild(valueBadge);
+  }
 
   if (weaponIneligible) {
     const badge = document.createElement("span");
@@ -60,17 +49,17 @@ export function createCardElement(card, { onClick, disabled = false, weaponIneli
     el.appendChild(badge);
   }
 
+  if (carried) {
+    const carriedTag = document.createElement("span");
+    carriedTag.className = "carried-tag";
+    carriedTag.textContent = "Carried";
+    carriedTag.setAttribute("aria-hidden", "true");
+    el.appendChild(carriedTag);
+  }
+
   if (onClick && !disabled) {
     el.addEventListener("click", () => onClick(card));
   }
 
-  return el;
-}
-
-export function createPileElement(label) {
-  const el = document.createElement("div");
-  el.className = "pile card-back";
-  el.setAttribute("role", "img");
-  el.setAttribute("aria-label", label);
   return el;
 }

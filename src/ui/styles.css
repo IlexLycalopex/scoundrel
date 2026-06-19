@@ -17,7 +17,9 @@
   font-family: "Segoe UI", system-ui, sans-serif;
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 body {
   margin: 0;
@@ -28,17 +30,22 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overscroll-behavior-y: contain;
 }
+
+button { touch-action: manipulation; }
 
 #hud {
   position: sticky;
   top: 0;
   z-index: 10;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 10px 16px;
   padding: 12px 20px;
+  padding-top: max(12px, env(safe-area-inset-top));
   background: linear-gradient(180deg, rgba(43, 39, 34, 0.88), rgba(24, 21, 18, 0.88));
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -52,20 +59,23 @@ body {
   background: linear-gradient(180deg, var(--stone) 0%, var(--stone-dark) 100%);
   color: var(--gold-bright);
   border: 2px solid var(--gold);
-  padding: 6px 14px;
+  padding: 8px 14px;
+  min-height: 40px;
   border-radius: 4px;
   font-weight: 700;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   cursor: pointer;
-  transition: box-shadow 0.15s ease, color 0.15s ease;
+  transition: box-shadow 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
 
 #rules-btn:hover {
   color: #fff;
   box-shadow: 0 0 8px rgba(201, 164, 76, 0.6);
 }
+
+#rules-btn:active { transform: translateY(1px); }
 
 #rules-btn:focus-visible { outline: 3px solid var(--gold-bright); }
 
@@ -78,10 +88,11 @@ body {
   font-weight: 700;
 }
 
-#health-panel { display: flex; align-items: center; gap: 12px; }
+#health-panel { display: flex; align-items: center; gap: 12px; min-width: 0; }
 
 #health-bar {
-  width: 220px;
+  width: min(220px, 42vw);
+  min-width: 110px;
   height: 24px;
   background: linear-gradient(180deg, #1a0f0f, #2a1414);
   border-radius: 4px;
@@ -207,6 +218,7 @@ body {
 }
 
 .card:hover { transform: translateY(-4px); }
+.card:active:not(.disabled) { transform: scale(0.96); }
 .card:focus-visible { outline: 3px solid #ffd24a; }
 
 .card.disabled { opacity: 0.45; cursor: default; pointer-events: none; }
@@ -282,6 +294,7 @@ body {
   color: var(--gold-bright);
   border: 2px solid var(--gold);
   padding: 10px 24px;
+  min-height: 44px;
   border-radius: 4px;
   font-weight: 700;
   font-size: 0.9rem;
@@ -318,9 +331,11 @@ body {
 
 #toast {
   position: fixed;
-  bottom: 24px;
+  bottom: max(24px, calc(env(safe-area-inset-bottom) + 12px));
   left: 50%;
   transform: translateX(-50%);
+  max-width: calc(100vw - 32px);
+  text-align: center;
   background: #2a3138;
   color: var(--ink);
   padding: 10px 18px;
@@ -374,6 +389,7 @@ body {
 .modal-actions button, .end-actions button {
   flex: 1;
   padding: 10px;
+  min-height: 44px;
   border-radius: 6px;
   border: 1px solid #000;
   background: #2a3138;
@@ -389,6 +405,32 @@ body {
 .monster-list li { padding: 4px 0; border-bottom: 1px solid #2a3138; }
 
 @media (max-width: 720px) {
-  #table { grid-template-columns: 1fr; }
+  #table { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
   #weapon-zone, #room-zone { grid-column: 1; }
+  .room-cards { gap: 12px; }
+  #hud { padding: 10px 14px; }
+  #turn-panel { order: 3; flex-basis: 100%; justify-content: center; }
+}
+
+@media (max-width: 400px) {
+  .card, .pile {
+    width: 92px;
+    height: 125px;
+  }
+  .room-cards { gap: 10px; }
+  .weapon-stack-card + .weapon-stack-card { margin-left: -46px; }
+  #avoid-btn { padding: 10px 18px; font-size: 0.8rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (hover: none) {
+  .card:hover { transform: none; }
+  #avoid-btn:hover:not(:disabled), #rules-btn:hover { box-shadow: none; color: var(--gold-bright); }
 }

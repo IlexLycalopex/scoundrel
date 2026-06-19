@@ -8,6 +8,12 @@
   --potion: #3cab6e;
   --warn: #e0533d;
   --good: #3cab6e;
+  --gold: #c9a44c;
+  --gold-bright: #e8c773;
+  --stone: #2b2722;
+  --stone-dark: #181512;
+  --blood: #7a1f1f;
+  --blood-bright: #c23a3a;
   font-family: "Segoe UI", system-ui, sans-serif;
 }
 
@@ -15,7 +21,9 @@
 
 body {
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(201, 164, 76, 0.06), transparent 60%),
+    var(--bg);
   color: var(--ink);
   min-height: 100vh;
   display: flex;
@@ -27,31 +35,59 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  background: var(--panel);
-  border-bottom: 2px solid #000;
+  background: linear-gradient(180deg, var(--stone), var(--stone-dark));
+  border-bottom: 3px solid var(--gold);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.hud-title { font-size: 0.8rem; color: var(--muted); display: block; }
+.hud-title {
+  font-size: 0.75rem;
+  color: var(--gold);
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
 
 #health-panel { display: flex; align-items: center; gap: 12px; }
 
 #health-bar {
   width: 220px;
-  height: 22px;
-  background: #2a3138;
-  border-radius: 11px;
+  height: 24px;
+  background: linear-gradient(180deg, #1a0f0f, #2a1414);
+  border-radius: 4px;
   overflow: hidden;
-  border: 1px solid #000;
+  border: 2px solid var(--stone-dark);
+  box-shadow:
+    0 0 0 2px var(--gold) inset,
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 2px 4px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+#health-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.18) 0px,
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 11px
+  );
+  pointer-events: none;
 }
 
 #health-fill {
   height: 100%;
   width: 100%;
-  background: var(--good);
+  background: linear-gradient(180deg, var(--blood-bright), var(--blood) 60%, #4a1212);
+  box-shadow: 0 0 8px rgba(194, 58, 58, 0.6) inset;
   transition: width 0.25s ease, background-color 0.25s ease;
 }
 
-#health-fill.warn { background: var(--warn); animation: pulse 1s infinite; }
+#health-fill.warn { background: linear-gradient(180deg, #ff8a3d, var(--warn) 60%, #7a2a12); animation: pulse 1s infinite; }
 #health-fill.flash-damage { background: #ff6b5e !important; }
 #health-fill.flash-heal { background: #6effb0 !important; }
 
@@ -60,7 +96,12 @@ body {
   50% { opacity: 0.55; }
 }
 
-#health-text { font-weight: 600; font-size: 1.1rem; }
+#health-text {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--gold-bright);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
 
 #turn-text { color: var(--muted); }
 
@@ -116,14 +157,15 @@ body {
   width: 110px;
   height: 150px;
   border-radius: 8px;
-  background: #fff;
-  border: 3px solid #000;
+  background: linear-gradient(160deg, #e9dcb8, #d8c79a);
+  border: 3px solid var(--stone-dark);
   padding: 0;
   cursor: pointer;
   position: relative;
   user-select: none;
   transition: transform 0.15s ease;
   overflow: visible;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45);
 }
 
 .card-face {
@@ -207,17 +249,41 @@ body {
 .card-back { background-image: url("../../assets/cards/back.jpg"); }
 
 #avoid-btn {
-  background: var(--weapon);
-  color: #fff;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-weight: 600;
+  background: linear-gradient(180deg, var(--stone) 0%, var(--stone-dark) 100%);
+  color: var(--gold-bright);
+  border: 2px solid var(--gold);
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   cursor: pointer;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 3px 6px rgba(0, 0, 0, 0.5);
+  transition: transform 0.1s ease, box-shadow 0.15s ease, color 0.15s ease;
 }
 
-#avoid-btn:disabled { background: #3a434b; color: var(--muted); cursor: not-allowed; }
-#avoid-btn:focus-visible { outline: 3px solid #ffd24a; }
+#avoid-btn:hover:not(:disabled) {
+  color: #fff;
+  box-shadow:
+    0 0 10px rgba(201, 164, 76, 0.6),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+#avoid-btn:active:not(:disabled) { transform: translateY(1px); }
+
+#avoid-btn:disabled {
+  background: var(--stone-dark);
+  color: var(--muted);
+  border-color: #4a443a;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+#avoid-btn:focus-visible { outline: 3px solid var(--gold-bright); }
 
 .avoid-reason { font-size: 0.8rem; color: var(--muted); }
 

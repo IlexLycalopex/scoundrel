@@ -27,6 +27,8 @@ export function createCardElement(card, { onClick, disabled = false, weaponIneli
   img.src = cardImagePath(card);
   img.alt = "";
   img.draggable = false;
+  img.decoding = "async";
+  img.loading = "eager";
   el.appendChild(img);
 
   // Face-rank monster cards (J/Q/K/A) print a letter, not the resolved

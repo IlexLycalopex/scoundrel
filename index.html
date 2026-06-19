@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Scoundrel</title>
+<link rel="stylesheet" href="src/ui/styles.css" />
+</head>
+<body>
+  <header id="hud" aria-label="Status">
+    <div id="health-panel" aria-live="polite">
+      <span id="health-label" class="hud-title">Health</span>
+      <div id="health-bar" role="img">
+        <div id="health-fill"></div>
+      </div>
+      <span id="health-text">20 / 20</span>
+    </div>
+    <div id="turn-panel">
+      <span id="turn-text">Turn 0</span>
+    </div>
+  </header>
+
+  <main id="table">
+    <section id="deck-zone" aria-label="Dungeon deck">
+      <div id="deck-pile" class="pile card-back" tabindex="0" role="img" aria-label="Dungeon deck"></div>
+      <div id="deck-count" class="pile-count">44 cards left</div>
+    </section>
+
+    <section id="weapon-zone" aria-label="Equipped weapon">
+      <h2 class="zone-title">Weapon</h2>
+      <div id="weapon-slot" class="weapon-slot"></div>
+      <div id="weapon-threshold" class="weapon-threshold" aria-live="polite"></div>
+    </section>
+
+    <section id="room-zone" aria-label="Room">
+      <h2 class="zone-title">Room</h2>
+      <div id="room-cards" class="room-cards"></div>
+      <button id="avoid-btn" type="button">Avoid Room</button>
+      <div id="avoid-reason" class="avoid-reason"></div>
+    </section>
+
+    <section id="discard-zone" aria-label="Discard pile">
+      <div id="discard-pile" class="pile card-back" role="img" aria-label="Discard pile"></div>
+      <div id="discard-count" class="pile-count">0 discarded</div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <div id="modal-overlay" class="overlay hidden">
+    <div id="modal" role="dialog" aria-modal="true"></div>
+  </div>
+
+  <div id="end-screen" class="overlay hidden">
+    <div id="end-card" role="dialog" aria-modal="true"></div>
+  </div>
+
+  <script type="module" src="src/ui/main.js"></script>
+</body>
+</html>

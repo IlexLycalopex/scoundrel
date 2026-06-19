@@ -454,11 +454,20 @@ button { touch-action: manipulation; }
 }
 
 @media (max-width: 720px) {
-  #table { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
-  #weapon-zone, #room-zone { grid-column: 1; }
+  #hud { padding: 10px 14px; justify-content: center; }
+  #health-panel { order: 1; flex-basis: 100%; justify-content: center; }
+  #turn-panel { order: 2; }
+  #rules-btn { order: 3; }
+
+  /* Weapon and room come first (the cards you act on); the deck/discard
+     piles are reference info, so they move to the bottom, side by side,
+     to keep the interactive area close to the HUD. */
+  #table { grid-template-columns: 1fr 1fr; padding: 16px; gap: 16px; }
+  #weapon-zone { grid-column: 1 / -1; order: 1; }
+  #room-zone { grid-column: 1 / -1; order: 2; }
+  #deck-zone { order: 3; }
+  #discard-zone { order: 4; }
   .room-cards { gap: 12px; }
-  #hud { padding: 10px 14px; }
-  #turn-panel { order: 3; flex-basis: 100%; justify-content: center; }
 }
 
 @media (max-width: 400px) {

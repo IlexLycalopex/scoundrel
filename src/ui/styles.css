@@ -228,6 +228,22 @@ button { touch-action: manipulation; }
 .card.type-weapon { border-color: var(--weapon); }
 .card.type-potion { border-color: var(--potion); }
 
+.card-fallback {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: linear-gradient(160deg, #e9dcb8, #d8c79a);
+  border-radius: 5px;
+}
+
+.card.art-failed .card-face { display: none; }
+.card.art-failed .card-fallback { display: flex; }
+
 .card-value-badge {
   position: absolute;
   top: -8px;

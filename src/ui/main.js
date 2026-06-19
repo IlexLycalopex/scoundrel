@@ -17,6 +17,7 @@ const els = {
   turnText: document.getElementById("turn-text"),
   deckCount: document.getElementById("deck-count"),
   discardCount: document.getElementById("discard-count"),
+  rulesBtn: document.getElementById("rules-btn"),
   weaponSlot: document.getElementById("weapon-slot"),
   weaponThreshold: document.getElementById("weapon-threshold"),
   roomCards: document.getElementById("room-cards"),
@@ -173,6 +174,61 @@ function handleMonsterClick(monster) {
     modal.append(h3, p, actions);
   });
 }
+
+function showRules() {
+  openModal((modal) => {
+    const h3 = document.createElement("h3");
+    h3.textContent = "How to Play";
+
+    const sections = [
+      {
+        title: "The Dungeon",
+        body: "Each room reveals 4 cards from the deck. Resolve 3 of them, then the 4th carries over into the next room alongside 3 new cards.",
+      },
+      {
+        title: "Cards",
+        body: "Clubs & Spades are monsters (fight or flee). Diamonds are weapons (equip one at a time). Hearts are potions (heal HP, capped at max health).",
+      },
+      {
+        title: "Fighting Monsters",
+        body: "Fight barehanded and take damage equal to the monster's value, or fight with your equipped weapon to take damage equal to monster value minus weapon value (minimum 0).",
+      },
+      {
+        title: "Weapon Durability",
+        body: "A weapon can only be used on monsters with a value lower than or equal to the last monster it defeated — once a tougher monster slips past it, that weapon can't be used on equal-or-higher monsters again until replaced.",
+      },
+      {
+        title: "Avoiding a Room",
+        body: "Instead of playing a room, you may avoid it once — the whole room goes to the bottom of the deck. You can't avoid two rooms in a row, and can't avoid the final room.",
+      },
+      {
+        title: "Winning & Scoring",
+        body: "Clear the dungeon before your HP hits 0. Your score is remaining HP, plus a bonus if you finish at full health with a potion as your last card.",
+      },
+    ];
+
+    for (const { title, body } of sections) {
+      const sectionTitle = document.createElement("h4");
+      sectionTitle.className = "rules-section-title";
+      sectionTitle.textContent = title;
+      const p = document.createElement("p");
+      p.textContent = body;
+      modal.append(sectionTitle, p);
+    }
+
+    const actions = document.createElement("div");
+    actions.className = "modal-actions";
+    const closeBtn = document.createElement("button");
+    closeBtn.textContent = "Close";
+    closeBtn.addEventListener("click", closeModal);
+    actions.appendChild(closeBtn);
+
+    modal.prepend(h3);
+    modal.appendChild(actions);
+  });
+}
+
+els.rulesBtn.addEventListener("click", showRules);
 
 // --- Rendering -------------------------------------------------------------
 
